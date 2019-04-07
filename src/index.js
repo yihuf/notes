@@ -1,5 +1,5 @@
 import {
-    Layout, Menu, Breadcrumb, Icon, Dropdown, message, Button, List
+    Layout, Menu, Breadcrumb, Icon, Dropdown, message, Button, List, AutoComplete
   } from 'antd';
 import './index.css';
 import React from 'react';
@@ -90,8 +90,8 @@ class Inbox extends React.Component{
             </Menu>
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
-                <Button type="primary" size="large" style={{ marginLeft: 950, borderStyle: 'none'}}>
+            <Header style={{ background: '#fff', padding: 0, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                <Button type="primary" size="large" style={{ float: "right" }}>
                     新增文章
                 </Button>
             </Header>
