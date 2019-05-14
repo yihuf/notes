@@ -1,9 +1,11 @@
 import {
-    Layout, Menu, Icon, Dropdown, message, Button, List, Input
+    Layout, Menu, Icon, Dropdown, message, Button, List
   } from 'antd';
 import '../index.css';
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
+import TopTitles from '../containers/TopTitles'
+
 
   const {
     Header, Content, Footer, Sider,
@@ -25,13 +27,17 @@ import { Link } from 'react-router-dom';
   renderItem={item => (<List.Item><Link to="/about">{item}</Link></List.Item>)}
   />
 
-  const addTitle = <Input placeholder="Basic usage" />
-
   export default class App extends Component {
+    componentDidMount() {
+      const { get_all_top_titles, change_is_add_top_titles_state, change_is_del_top_titles_state } = this.props;
+      get_all_top_titles()
+      change_is_add_top_titles_state(false)
+      change_is_del_top_titles_state(false)
+    }
+
     state = {
       collapsed: false,
-      titles: [],
-      isAddTitle: false
+      titles: []
     };
   
     onCollapse = (collapsed) => {
@@ -47,15 +53,30 @@ import { Link } from 'react-router-dom';
     handleMenuClick = (e) => {
       message.info('Click on menu item.');
       console.log('click', e);
-      this.setState({isAddTitle:true});
+      if (e.key === '1') {
+        this.props.change_is_add_top_titles_state(true);
+      } else if (e.key === '2') {
+        this.props.change_is_del_top_titles_state(true);
+      }
     }
 
     render() {
+      const { all_top_titles, is_add_top_titles_state, is_del_top_titles_state } = this.props;
+
       const rootMenu = (
         <Menu onClick={this.handleMenuClick}>
           <Menu.Item key="1"><Icon type="user" />新增分类</Menu.Item>
+          <Menu.Item key="2"><Icon type="user" />删除分类</Menu.Item>
         </Menu>
       );
+
+      let items = []
+      if (all_top_titles !== undefined) {
+        for (let item of all_top_titles) {
+          console.log(item)
+          items.push(<Menu.Item key={item.uuid}>{<span><Icon type="file-text" /><span>{item.name}</span></span>}</Menu.Item>)
+        }
+      }
 
       return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -77,9 +98,7 @@ import { Link } from 'react-router-dom';
                       </Button>
                   </Dropdown></span></span>}
               >
-                <Menu.Item key="3">{<span><Icon type="file-text" /><span>User</span></span>}</Menu.Item>
-                <Menu.Item key="4">{<span><Icon type="file-text" /><span>hrhr</span></span>}</Menu.Item>
-                <Menu.Item key="5">{<span><Icon type="file-text" /><span>hrhr1</span></span>}</Menu.Item>
+               {items}
               </SubMenu>
             </Menu>
           </Sider>
@@ -87,7 +106,7 @@ import { Link } from 'react-router-dom';
             <Header style={{ background: '#fff', padding: 0 }}>
             </Header>
             <Content style={{ margin: '0 16px' }}>
-               {this.state.isAddTitle ? addTitle : titleList}
+               {(is_add_top_titles_state||is_del_top_titles_state) ? <TopTitles /> : titleList}
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Ant Design ©2018 Created by Ant UED
