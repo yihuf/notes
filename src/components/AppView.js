@@ -4,8 +4,9 @@ import {
 import '../index.css';
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import TopTitles from '../containers/TopTitles'
-
+import AddTopTitles from '../containers/AddTopTitles'
+import DelTopTitles from '../containers/DelTopTitles'
+import * as Constant from './Constant'
 
   const {
     Header, Content, Footer, Sider,
@@ -29,10 +30,9 @@ import TopTitles from '../containers/TopTitles'
 
   export default class App extends Component {
     componentDidMount() {
-      const { get_all_top_titles, change_is_add_top_titles_state, change_is_del_top_titles_state } = this.props;
+      const { get_all_top_titles, change_main_content_state } = this.props;
       get_all_top_titles()
-      change_is_add_top_titles_state(false)
-      change_is_del_top_titles_state(false)
+      change_main_content_state(Constant.SHOW_MAIN_CONTENT_STATE)
     }
 
     state = {
@@ -44,24 +44,18 @@ import TopTitles from '../containers/TopTitles'
       console.log(collapsed);
       this.setState({ collapsed });
     }
-  
-    handleButtonClick = (e) => {
-      message.info('Click on left button.');
-      console.log('click left button', e);
-    }
     
     handleMenuClick = (e) => {
-      message.info('Click on menu item.');
       console.log('click', e);
       if (e.key === '1') {
-        this.props.change_is_add_top_titles_state(true);
+        this.props.change_main_content_state(Constant.ADD_TOP_TITLES_STATE);
       } else if (e.key === '2') {
-        this.props.change_is_del_top_titles_state(true);
+        this.props.change_main_content_state(Constant.DEL_TOP_TITLES_STATE);
       }
     }
 
     render() {
-      const { all_top_titles, is_add_top_titles_state, is_del_top_titles_state } = this.props;
+      const { all_top_titles, main_content_state } = this.props;
 
       const rootMenu = (
         <Menu onClick={this.handleMenuClick}>
@@ -76,6 +70,22 @@ import TopTitles from '../containers/TopTitles'
           console.log(item)
           items.push(<Menu.Item key={item.uuid}>{<span><Icon type="file-text" /><span>{item.name}</span></span>}</Menu.Item>)
         }
+      }
+
+      let comp = null
+      switch (main_content_state) {
+        case Constant.ADD_TOP_TITLES_STATE:
+          comp = <AddTopTitles />
+          break
+        case Constant.SHOW_MAIN_CONTENT_STATE:
+          comp = titleList
+          break
+        case Constant.DEL_TOP_TITLES_STATE:
+          comp = <DelTopTitles />
+          break
+        default:
+          comp = titleList
+          break
       }
 
       return (
@@ -106,7 +116,7 @@ import TopTitles from '../containers/TopTitles'
             <Header style={{ background: '#fff', padding: 0 }}>
             </Header>
             <Content style={{ margin: '0 16px' }}>
-               {(is_add_top_titles_state||is_del_top_titles_state) ? <TopTitles /> : titleList}
+               {comp}
             </Content>
             <Footer style={{ textAlign: 'center' }}>
               Ant Design ©2018 Created by Ant UED

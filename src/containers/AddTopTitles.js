@@ -1,10 +1,8 @@
-import AppView from '../components/AppView'
+import AddTopTitlesView from '../components/AddTopTitlesView'
 import { connect } from 'react-redux';
 import * as actions from '../actions/notesAction'
 
 const mapStateToProps = (state) => ({
-    all_top_titles: state.notes.all_top_titles,
-    main_content_state: state.notes.main_content_state,
 })
 
 const mapDispatchToProps = (dispatch) => {
@@ -17,4 +15,4 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(  
     mapStateToProps,
-    mapDispatchToProps)(AppView)
+    mapDispatchToProps)(AddTopTitlesView)

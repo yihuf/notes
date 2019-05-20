@@ -7,7 +7,7 @@ export const getAllTopTitles = () => {
         .then((response) => {
           dispatch(
             {
-              type: 'GET_ALL_TITLES',
+              type: 'GET_ALL_TOP_TITLES',
               payload: response.data
             }
           )
@@ -27,7 +27,7 @@ export const getAllTopTitles = () => {
       axios.post(url, topTitles)
         .then(
           (response) => {
-            console.log(response.data)
+            dispatch(getAllTopTitles())
           }
         ).catch((error) => {
           dispatch({
@@ -38,26 +38,30 @@ export const getAllTopTitles = () => {
       }
   }
 
-  export const changeIsAddTopTitlesState = (state) => {
+  export const delTopTitles = (uuid) => {
+    return (dispatch) => {
+      const url = 'http://127.0.0.1:8000/notes/titles/' + uuid + '/';
+      axios.delete(url)
+        .then(
+          (response) => {
+            dispatch(getAllTopTitles())
+          }
+        ).catch((error) => {
+          dispatch({
+            type: 'ERRORS',
+            payload: 'error'
+          })
+        })
+      }
+  } 
+
+  export const changeMainContentState = (state) => {
     return (dispatch) => {
       dispatch(
         {
-          type:'IsAddTiTlesState',
+          type:'MAIN_CONTENT_STATE',
           payload:state
         }
       )
     }
   }
-
-  export const changeIsDelTopTitlesState = (state) => {
-    return (dispatch) => {
-      dispatch(
-        {
-          type:'IsDelTiTlesState',
-          payload:state
-        }
-      )
-    }
-  }
-
-

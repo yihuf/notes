@@ -4,9 +4,10 @@ import {
     Input, Button
   } from 'antd';
 
+import * as Constant from './Constant'
 
   
-  export default class TopTitlesView extends React.Component {
+  export default class AddTopTitlesView extends React.Component {
     constructor(){
       super()
       this.state = {
@@ -20,9 +21,9 @@ import {
       this.setState({topTitle:value})
      }
 
-    onClick = (e) => {
+    onAddClick = (e) => {
         console.log(e)
-        const { get_all_top_titles, add_top_titles, change_is_add_top_titles_state } = this.props
+        const { get_all_top_titles, add_top_titles, change_main_content_state } = this.props
         add_top_titles(
           {
               "uuid":"000-000-000-000",
@@ -31,19 +32,30 @@ import {
               "status":0
           }
         )
-        get_all_top_titles()
-        change_is_add_top_titles_state(false)
-     }
+
+        change_main_content_state(Constant.SHOW_MAIN_CONTENT_STATE)
+      }
+
+    onCancelClick = (e) => {
+      this.props.change_main_content_state(Constant.SHOW_MAIN_CONTENT_STATE)
+    }
+
     render() {
       return (
             <div>
-            <Input onChange={this.onChange} placeholder="TopTitle" />
+            <Input value={this.state.topTitle} onChange={this.onChange} placeholder="TopTitle" />
             <Button
-              onClick={this.onClick}
+              onClick={this.onAddClick}
               type="primary"
-              htmlType="submit"
+              style={{marginRight:20}}
             >
               Submit
+            </Button>
+            <Button
+              onClick={this.onCancelClick}
+              type="primary"
+            >
+              Cancel
             </Button>
             </div>
       );
