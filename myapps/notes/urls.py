@@ -20,9 +20,10 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^top_titles/$', views.top_titles),
+    url(r'^top_titles/(?P<parent_uuid>[a-z0-9-]+)/$', views.get_titles_by_parent_uuid),
     url(r'^titles/$', views.all_titles),
     url(r'^titles/(?P<uuid>[a-z0-9-]+)/$', views.titles),
-    url(r'content/(?P<uuid>[a-z0-9-]+)/$', views.content),
-    url(r'content/$', views.add_content)
+    url(r'^content/(?P<uuid>[a-z0-9-]+)/$', views.content),
+    url(r'^content/$', views.add_content),
+    url(r'^all_content/$', views.all_content)
 ]

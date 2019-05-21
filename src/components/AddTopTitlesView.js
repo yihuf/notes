@@ -8,11 +8,8 @@ import * as Constant from './Constant'
 
   
   export default class AddTopTitlesView extends React.Component {
-    constructor(){
-      super()
-      this.state = {
-        topTitle:""
-      }
+    state = {
+      topTitle:""
     }
 
     onChange = (e) => {

@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import AddTopTitles from '../containers/AddTopTitles'
 import DelTopTitles from '../containers/DelTopTitles'
+import AddContent from '../containers/AddContent'
 import * as Constant from './Constant'
 
   const {
@@ -54,6 +55,10 @@ import * as Constant from './Constant'
       }
     }
 
+    onAddContentClick = () => {
+      this.props.change_main_content_state(Constant.ADD_CONTENT_STATE);
+    }
+
     render() {
       const { all_top_titles, main_content_state } = this.props;
 
@@ -82,6 +87,9 @@ import * as Constant from './Constant'
           break
         case Constant.DEL_TOP_TITLES_STATE:
           comp = <DelTopTitles />
+          break
+        case Constant.ADD_CONTENT_STATE:
+          comp = <AddContent />
           break
         default:
           comp = titleList
@@ -114,6 +122,15 @@ import * as Constant from './Constant'
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
+              <Button
+                onClick={this.onAddContentClick}
+                type="primary"
+                style={{marginLeft:20,
+                display:(main_content_state === Constant.SHOW_MAIN_CONTENT_STATE) ? 'inline':'none'
+                }}
+              >
+                新增文章
+              </Button>
             </Header>
             <Content style={{ margin: '0 16px' }}>
                {comp}

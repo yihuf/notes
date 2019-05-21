@@ -10,4 +10,4 @@ class TitlesSerializers(serializers.ModelSerializer):
 class ContentsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Contents
-        fields = ('uuid', 'content')
+        fields = ('uuid', 'content', 'modifyDate')

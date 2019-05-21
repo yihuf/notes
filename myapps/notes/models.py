@@ -16,3 +16,4 @@ class Titles(models.Model):
 class Contents(models.Model):
     uuid = models.CharField(max_length=37)
     content = models.CharField(max_length=5000)
+    modifyDate = models.DateTimeField()

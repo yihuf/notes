@@ -65,10 +65,10 @@ def titles(request, uuid):
 
 
 @csrf_exempt
-def top_titles(request):
+def get_titles_by_parent_uuid(request, parent_uuid):
     if request.method == 'GET':
         try:
-            titles = Titles.objects.filter(parent_uuid='000-000-000-000')
+            titles = Titles.objects.filter(parent_uuid=parent_uuid)
         except Titles.DoesNotExist:
             return HttpResponse(status=404)
 
@@ -107,5 +107,20 @@ def add_content(request):
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
+    elif request.method == 'GET':
+        try:
+            content = Contents.objects.all()
+        except Contents.DoesNotExist:
+            return HttpResponse(status=404)
+        serializer = ContentsSerializers(content, many=True)
+        return JSONResponse(serializer.data)
 
-
+@csrf_exempt
+def all_content(request):
+    if request.method == 'GET':
+        try:
+            content = Contents.objects.all()
+        except Contents.DoesNotExist:
+            return HttpResponse(status=404)
+        serializer = ContentsSerializers(content, many=True)
+        return JSONResponse(serializer.data)
