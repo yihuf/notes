@@ -33,14 +33,16 @@ export default class AddContentView extends React.Component {
    }
 
   onAddClick = (e) => {
-      console.log(e)
-      const { get_all_top_titles, add_top_titles, change_main_content_state } = this.props
-      add_top_titles(
+      const { add_content, all_top_titles, change_main_content_state } = this.props
+      let uuid = this.state.parent_uuid
+      if (uuid === "") {
+        uuid = all_top_titles[0].uuid
+      }
+      add_content(
         {
-            "uuid":"000-000-000-000",
-            "parent_uuid":"000-000-000-000",
-            "name":this.state.topTitle,
-            "status":0
+            "parent_uuid": uuid,
+            "name":this.state.title,
+            "content":this.state.content
         }
       )
 
@@ -62,7 +64,7 @@ export default class AddContentView extends React.Component {
         >
           {all_top_titles.map(item => <Option key={item.uuid}>{item.name}</Option>)}
         </Select>
-        <Input value={this.state.topTitle} onChange={this.onTitleChange} placeholder="Title" />
+        <Input value={this.state.title} onChange={this.onTitleChange} placeholder="Title" />
         <Input.TextArea rows={4} autosize={{ minRows: 8 }} onChange={this.onContentChange} />
         <Button
             onClick={this.onAddClick}
