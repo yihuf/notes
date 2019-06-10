@@ -5,10 +5,11 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from models import Contents, Titles
-from serializers import ContentsSerializers, TitlesSerializers
+from models import Note
+from serializers import NoteSerializers
 
 import uuid
+from datetime import datetime
 
 class JSONResponse(HttpResponse):
     """
@@ -24,16 +25,19 @@ class JSONResponse(HttpResponse):
 def all_titles(request):
     if request.method == 'GET':
         try:
-            titles = Titles.objects.all()
-        except Titles.DoesNotExist:
+            titles = Note.objects.all()
+        except Note.DoesNotExist:
             return HttpResponse(status=404)
 
-        serializer = TitlesSerializers(titles, many=True)
+        serializer = NoteSerializers(titles, many=True)
         return JSONResponse(serializer.data)
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         data['uuid'] = str(uuid.uuid1())
-        serializer = TitlesSerializers(data=data)
+        if data['parent_uuid'] == '000-000-000-000':
+            data['content'] = 'NA'
+        data['modifyDate'] = datetime.now()
+        serializer = NoteSerializers(data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data, status=201)
@@ -43,17 +47,17 @@ def all_titles(request):
 def titles(request, uuid):
     print(uuid)
     try:
-        titles = Titles.objects.get(uuid=uuid)
-    except Titles.DoesNotExist:
+        titles = Note.objects.get(uuid=uuid)
+    except Note.DoesNotExist:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = TitlesSerializers(titles)
+        serializer = NoteSerializers(titles)
         return JSONResponse(serializer.data)
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
-        serializer = TitlesSerializers(titles, data=data)
+        serializer = NoteSerializers(titles, data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data)
@@ -68,27 +72,27 @@ def titles(request, uuid):
 def get_titles_by_parent_uuid(request, parent_uuid):
     if request.method == 'GET':
         try:
-            titles = Titles.objects.filter(parent_uuid=parent_uuid)
-        except Titles.DoesNotExist:
+            titles = Note.objects.filter(parent_uuid=parent_uuid)
+        except Note.DoesNotExist:
             return HttpResponse(status=404)
 
-        serializer = TitlesSerializers(titles, many=True)
+        serializer = NoteSerializers(titles, many=True)
         return JSONResponse(serializer.data)
 
 @csrf_exempt
 def content(request, uuid):
     try:
-        content = Contents.objects.get(uuid=uuid)
-    except Contents.DoesNotExist:
+        content = Note.objects.get(uuid=uuid)
+    except Note.DoesNotExist:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = ContentsSerializers(content)
+        serializer = NoteSerializers(content)
         return JSONResponse(serializer.data)
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
-        serializer = ContentsSerializers(content, data=data)
+        serializer = NoteSerializers(content, data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data)
@@ -102,25 +106,25 @@ def content(request, uuid):
 def add_content(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = ContentsSerializers(data=data)
+        serializer = NoteSerializers(data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
     elif request.method == 'GET':
         try:
-            content = Contents.objects.all()
-        except Contents.DoesNotExist:
+            content = Note.objects.all()
+        except Note.DoesNotExist:
             return HttpResponse(status=404)
-        serializer = ContentsSerializers(content, many=True)
+        serializer = NoteSerializers(content, many=True)
         return JSONResponse(serializer.data)
 
 @csrf_exempt
 def all_content(request):
     if request.method == 'GET':
         try:
-            content = Contents.objects.all()
-        except Contents.DoesNotExist:
+            content = Note.objects.all()
+        except Note.DoesNotExist:
             return HttpResponse(status=404)
-        serializer = ContentsSerializers(content, many=True)
+        serializer = NoteSerializers(content, many=True)
         return JSONResponse(serializer.data)

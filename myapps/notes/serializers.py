@@ -1,13 +1,8 @@
 from rest_framework import serializers
-from models import Titles, Contents
+from models import Note
 
-class TitlesSerializers(serializers.ModelSerializer):
+class NoteSerializers(serializers.ModelSerializer):
     class Meta:
-        model = Titles
-        fields = ('uuid', 'parent_uuid', 'name', 'status')
+        model = Note
+        fields = ('uuid', 'parent_uuid', 'name', 'status', 'content', 'modifyDate')
 
-
-class ContentsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Contents
-        fields = ('uuid', 'content', 'modifyDate')

@@ -31,63 +31,20 @@ import * as Constant from './Constant'
 */
 
 const columns = [{
-  title: 'Name',
-  dataIndex: 'name',
-  key: 'name',
-  render: text => <a href="javascript:;">{text}</a>,
+  title: '标题',
+  dataIndex: 'title',
+  key: 'title',
+  //render: text => <a href="javascript:;">{text}</a>,
 }, {
-  title: 'Age',
-  dataIndex: 'age',
-  key: 'age',
-}, {
-  title: 'Address',
-  dataIndex: 'address',
-  key: 'address',
-}, {
-  title: 'Tags',
-  key: 'tags',
-  dataIndex: 'tags',
-  render: tags => (
-    <span>
-      {tags.map(tag => {
-        let color = tag.length > 5 ? 'geekblue' : 'green';
-        if (tag === 'loser') {
-          color = 'volcano';
-        }
-        return <Tag color={color} key={tag}>{tag.toUpperCase()}</Tag>;
-      })}
-    </span>
-  ),
-}, {
-  title: 'Action',
-  key: 'action',
-  render: (text, record) => (
-    <span>
-      <a href="javascript:;">Invite {record.name}</a>
-      <Divider type="vertical" />
-      <a href="javascript:;">Delete</a>
-    </span>
-  ),
+  title: '修改日期',
+  dataIndex: 'modifyDate',
+  key: 'modifyDate',
 }];
 
 const data = [{
   key: '1',
-  name: 'John Brown',
-  age: 32,
-  address: 'New York No. 1 Lake Park',
-  tags: ['nice', 'developer'],
-}, {
-  key: '2',
-  name: 'Jim Green',
-  age: 42,
-  address: 'London No. 1 Lake Park',
-  tags: ['loser'],
-}, {
-  key: '3',
-  name: 'Joe Black',
-  age: 32,
-  address: 'Sidney No. 1 Lake Park',
-  tags: ['cool', 'teacher'],
+  title: 'John Brown',
+  modifyDate: 32
 }];
 
   export default class App extends Component {
@@ -119,6 +76,16 @@ const data = [{
       this.props.change_main_content_state(Constant.ADD_CONTENT_STATE);
     }
 
+    onRowAction = () => {
+      return {
+        onClick: (event) => {console.log(event.target)},       // 点击行
+        onDoubleClick: (event) => {},
+        onContextMenu: (event) => {},
+        onMouseEnter: (event) => {},  // 鼠标移入行
+        onMouseLeave: (event) => {}
+      };
+    }
+
     render() {
       const { all_top_titles, main_content_state } = this.props;
 
@@ -143,7 +110,7 @@ const data = [{
           comp = <AddTopTitles />
           break
         case Constant.SHOW_MAIN_CONTENT_STATE:
-          comp = <Table columns={columns} dataSource={data} />
+          comp = <Table columns={columns} dataSource={data} onRow={this.onRowAction}/>
           break
         case Constant.DEL_TOP_TITLES_STATE:
           comp = <DelTopTitles />
